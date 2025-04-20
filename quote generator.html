@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .header {
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .quote-section {
+            margin: 30px 0;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .quote-text {
+            font-size: 1.5rem;
+            color: #444;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .quote-author {
+            font-style: italic;
+            color: #666;
+            text-align: right;
+            font-size: 1.1rem;
+            transition: opacity 0.3s ease;
+        }
+        
+        .quote-text::before {
+            content: '"';
+            font-size: 4rem;
+            color: #ddd;
+            position: absolute;
+            top: -20px;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .quote-text::after {
+            content: '"';
+            font-size: 4rem;
+            color: #ddd;
+            position: absolute;
+            bottom: -50px;
+            right: 0;
+            z-index: -1;
+        }
+        
+        button {
+            background-color: #6e8efb;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background-color: #5d7ce6;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .fade {
+            opacity: 0;
+        }
+        
+        .category-selector {
+            margin-bottom: 20px;
+        }
+        
+        select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            background-color: white;
+        }
+        
+        .features-list {
+            text-align: left;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+        }
+        
+        .features-list h3 {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .features-list ul {
+            padding-left: 20px;
+        }
+        
+        .features-list li {
+            margin-bottom: 5px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Random Quote Generator</h1>
+            <p>Click the button to display a new inspiring quote!</p>
+        </div>
+        
+        <div class="category-selector">
+            <label for="category">Choose a category: </label>
+            <select id="category">
+                <option value="all">All Categories</option>
+                <option value="motivation">Motivation</option>
+                <option value="success">Success</option>
+                <option value="wisdom">Wisdom</option>
+                <option value="happiness">Happiness</option>
+            </select>
+        </div>
+        
+        <div class="quote-section">
+            <p id="quote-text" class="quote-text">Click the button below to generate your first quote!</p>
+            <p id="quote-author" class="quote-author"></p>
+        </div>
+        
+        <button id="new-quote-btn">Generate Quote</button>
+        
+        <div class="features-list">
+            <h3>Features Implemented:</h3>
+            <ul>
+                <li>Arrays - Storing quotes collection</li>
+                <li>Functions - For quote selection and display</li>
+                <li>DOM Manipulation - Updating content dynamically</li>
+                <li>Event Listeners - Button click handling</li>
+                <li>Animation Effects - Fade transitions</li>
+                <li>Category Filter - Quote selection by topic</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Arrays to store quotes
+        const quotesDatabase = [
+            {
+                text: "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+                author: "Nelson Mandela",
+                category: "motivation"
+            },
+            {
+                text: "The way to get started is to quit talking and begin doing.",
+                author: "Walt Disney",
+                category: "success"
+            },
+            {
+                text: "If life were predictable it would cease to be life, and be without flavor.",
+                author: "Eleanor Roosevelt",
+                category: "wisdom"
+            },
+            {
+                text: "Life is what happens when you're busy making other plans.",
+                author: "John Lennon",
+                category: "wisdom"
+            },
+            {
+                text: "Spread love everywhere you go. Let no one ever come to you without leaving happier.",
+                author: "Mother Teresa",
+                category: "happiness"
+            },
+            {
+                text: "When you reach the end of your rope, tie a knot in it and hang on.",
+                author: "Franklin D. Roosevelt",
+                category: "motivation"
+            },
+            {
+                text: "Always remember that you are absolutely unique. Just like everyone else.",
+                author: "Margaret Mead",
+                category: "happiness"
+            },
+            {
+                text: "Don't judge each day by the harvest you reap but by the seeds that you plant.",
+                author: "Robert Louis Stevenson",
+                category: "wisdom"
+            },
+            {
+                text: "The future belongs to those who believe in the beauty of their dreams.",
+                author: "Eleanor Roosevelt",
+                category: "motivation"
+            },
+            {
+                text: "Tell me and I forget. Teach me and I remember. Involve me and I learn.",
+                author: "Benjamin Franklin",
+                category: "wisdom"
+            },
+            {
+                text: "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart.",
+                author: "Helen Keller",
+                category: "happiness"
+            },
+            {
+                text: "It is during our darkest moments that we must focus to see the light.",
+                author: "Aristotle",
+                category: "motivation"
+            },
+            {
+                text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+                author: "Winston Churchill",
+                category: "success"
+            },
+            {
+                text: "You will face many defeats in life, but never let yourself be defeated.",
+                author: "Maya Angelou", 
+                category: "motivation"
+            },
+            {
+                text: "The only impossible journey is the one you never begin.",
+                author: "Tony Robbins",
+                category: "success"
+            }
+        ];
+
+        // DOM Elements
+        const quoteText = document.getElementById('quote-text');
+        const quoteAuthor = document.getElementById('quote-author');
+        const newQuoteBtn = document.getElementById('new-quote-btn');
+        const categorySelector = document.getElementById('category');
+        
+        // Track current and previous quote indices to avoid repetition
+        let currentQuoteIndex = -1;
+        let previousQuoteIndex = -1;
+        
+        // Function to generate a random quote
+        function generateRandomQuote() {
+            // Get selected category
+            const selectedCategory = categorySelector.value;
+            
+            // Filter quotes based on selected category
+            const filteredQuotes = selectedCategory === 'all' 
+                ? quotesDatabase 
+                : quotesDatabase.filter(quote => quote.category === selectedCategory);
+                
+            // Make sure we have quotes in the selected category
+            if (filteredQuotes.length === 0) {
+                quoteText.textContent = "No quotes available in this category.";
+                quoteAuthor.textContent = "";
+                return;
+            }
+            
+            // Get random quote index (ensuring it's different from previous)
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * filteredQuotes.length);
+            } while (filteredQuotes.length > 1 && newIndex === previousQuoteIndex);
+            
+            previousQuoteIndex = newIndex;
+            
+            // Add fade-out effect
+            quoteText.classList.add('fade');
+            quoteAuthor.classList.add('fade');
+            
+            // Set timeout for animation effect
+            setTimeout(() => {
+                // Update quote text and author
+                quoteText.textContent = filteredQuotes[newIndex].text;
+                quoteAuthor.textContent = "— " + filteredQuotes[newIndex].author;
+                
+                // Remove fade class after updating content
+                setTimeout(() => {
+                    quoteText.classList.remove('fade');
+                    quoteAuthor.classList.remove('fade');
+                }, 50);
+            }, 300);
+        }
+        
+        // Event Listeners
+        newQuoteBtn.addEventListener('click', generateRandomQuote);
+        categorySelector.addEventListener('change', generateRandomQuote);
+        
+        // Generate initial quote when page loads
+        window.addEventListener('load', () => {
+            // Set a small delay for better UX
+            setTimeout(generateRandomQuote, 500);
+        });
+    </script>
+</body>
+</html>
